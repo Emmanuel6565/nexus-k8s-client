@@ -24,5 +24,5 @@ func main() {
 	if err != nil {
 		panic(err.Error())
 	}
-	fmt.Println(pods.Items)
+	fmt.Println(len(pods.Items))
 }

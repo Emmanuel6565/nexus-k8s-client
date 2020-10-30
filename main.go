@@ -29,7 +29,7 @@ func main() {
 		Namespace("default").
 		SubResource("exec").
 		VersionedParams(&corev1.PodExecOptions{
-			Container: "",
+			Container: "nexus",
 			Command:   command,
 			Stdin:     true,
 			Stdout:    true,

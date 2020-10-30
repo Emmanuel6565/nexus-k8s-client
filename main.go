@@ -25,7 +25,7 @@ func main() {
 	}
 	req := clientset.CoreV1().RESTClient().Post().
 		Resource("pods").
-		Name("nexus-client").
+		Name("nexus-sonatype-nexus-5dfffc7df8-t7t99").
 		Namespace("default").
 		SubResource("exec").
 		VersionedParams(&corev1.PodExecOptions{

@@ -22,7 +22,10 @@ func main() {
 		"sh",
 		"-c",
 		"ls -a",
-		"a=7; if [ $a -gt 5 ]; then echo 'bonjour'; fi",
+		"a=7",
+		"if [ $a -gt 5 ]",
+		"then echo 'bonjour'",
+		"fi",
 	}
 	req := clientset.CoreV1().RESTClient().Post().
 		Resource("pods").

@@ -1,28 +1,52 @@
 package main
 
 import (
-	"context"
 	"fmt"
+	"os"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	corev1 "k8s.io/api/core/v1"
 	"k8s.io/client-go/kubernetes"
-	"k8s.io/client-go/rest"
+	"k8s.io/client-go/kubernetes/scheme"
+	"k8s.io/client-go/tools/clientcmd"
+	"k8s.io/client-go/tools/remotecommand"
 )
 
 func main() {
-	// create the in-cluster config
-	inClusterConfig, err := rest.InClusterConfig()
+
+	config, err := clientcmd.BuildConfigFromFlags("", "")
 	if err != nil {
 		panic(err.Error())
 	}
-	// create a clientSet
-	clientset, err := kubernetes.NewForConfig(inClusterConfig)
-	if err != nil {
-		panic(err.Error())
+	clientset, _ := kubernetes.NewForConfig(config)
+	command := []string{
+		"sh",
+		"-c",
+		"ls -a",
 	}
-	pods, err := clientset.CoreV1().Pods("default").List(context.TODO(), v1.ListOptions{})
+	req := clientset.CoreV1().RESTClient().Post().
+		Resource("pods").
+		Name("nexus-client").
+		Namespace("default").
+		SubResource("exec").
+		VersionedParams(&corev1.PodExecOptions{
+			Container: "",
+			Command:   command,
+			Stdin:     true,
+			Stdout:    true,
+			Stderr:    true,
+			TTY:       true,
+		}, scheme.ParameterCodec)
+	exec, err := remotecommand.NewSPDYExecutor(config, "POST", req.URL())
+	err = exec.Stream(remotecommand.StreamOptions{
+		Stdin:  os.Stdin,
+		Stdout: os.Stdout,
+		Stderr: os.Stderr,
+		Tty:    true,
+	})
 	if err != nil {
-		panic(err.Error())
+		panic(err)
 	}
-	fmt.Println(len(pods.Items))
+
+	fmt.Println()
+
 }

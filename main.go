@@ -23,7 +23,7 @@ func main() {
 		"-c",
 		"ls -a",
 		"echo $(date +%s) > heure",
-		"echo $heure"
+		"echo $heure",
 	}
 	req := clientset.CoreV1().RESTClient().Post().
 		Resource("pods").

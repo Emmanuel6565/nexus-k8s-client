@@ -22,14 +22,12 @@ func main() {
 		"sh",
 		"-c",
 		"ls -a",
-		"a=7",
-		"if [ $a -gt 5 ]",
-		"then echo 'bonjour'",
-		"fi",
+		"echo $(date +%s) > heure",
+		"echo $heure"
 	}
 	req := clientset.CoreV1().RESTClient().Post().
 		Resource("pods").
-		Name("nexus-sonatype-nexus-5dfffc7df8-t7t99").
+		Name("nexus-sonatype-nexus-6fb649db5c-xshlj").
 		Namespace("default").
 		SubResource("exec").
 		VersionedParams(&corev1.PodExecOptions{
